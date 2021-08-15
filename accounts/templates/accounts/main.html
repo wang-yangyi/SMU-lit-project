@@ -1,0 +1,428 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Metropolis:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+	* {
+		margin: 0; 
+		padding: 0; 
+		font-family: 'Metropolis', sans-serif;
+	}
+
+	h1, h2, h3 {
+		font-family: 'Metropolis', sans-serif;
+	}
+
+	body {
+		line-height: 1.3; 
+		height: 100vh; 
+		color: black;
+		overflow: hidden; 
+		background: black;
+	}
+
+	canvas {
+		position: fixed; 
+		top: 0; 
+		left: 0; 
+		z-index: -1; 
+	}
+
+	.container {
+		width: 100%; 
+		height: 100%; 
+		overflow-y: scroll; 
+		scroll-behavior: smooth;
+	}
+
+	.navbar {
+		position: fixed; 
+		top: 7vh;
+		right: 15vw; 
+		z-index: 2;
+		display: flex; 
+		justify-content: flex-end; 
+		width: 100%;
+	}
+
+	.navbar a {
+		margin: 10px;
+		text-decoration: none;
+		font-size: 20px;
+	}
+
+	.card-container {
+		display: flex;
+		flex-flow: wrap;
+		justify-content: space-evenly;
+	}
+
+	.card {
+		margin: 0.5em auto;
+		margin: 1%;
+		transition: transform .2s;
+	}
+
+	.card-image {
+		width: 60%;
+		margin: 0 auto;
+	}
+
+	.card-image {
+		padding: 1.2em 1em;
+	} 
+
+	.card-description {
+		padding: 1em 2em;
+		width: 90%;
+		margin: 0 auto;
+	}
+
+	.card-image img {
+		display: block;
+		margin: 0 auto;
+		max-width: 100%;
+		height: auto;
+	}
+
+	@media screen and (min-width: 40em) {
+		.card {
+		max-width: calc(50% -  1em);
+		}
+	}
+
+	@media screen and (min-width: 60em) {
+		.card {
+			max-width: calc(35% - 1em);
+		}
+	}
+
+	.centered {
+		margin: 0 auto;
+		padding: 0 1em;
+	}
+
+	@media screen and (min-width: 52em) {
+		.centered {
+			max-width: 52em;
+		}
+	}
+
+	section {
+		display: flex; 
+		flex-direction: column; 
+		align-items: center; 
+		text-align: left;
+		min-height: 100vh; 
+		scroll-snap-align: center; 
+	}
+
+	section#home {
+		align-items: flex-start; 
+		/* justify-content: center; */
+		margin: 10vh 15vw 0 15vw; 
+	}
+
+	section#about {
+		min-height: 70vh;
+		align-items: flex-start;
+		margin: 0 15vw; 
+	}
+
+	section#more {
+		justify-content: center;
+	}
+
+	section {
+		margin: 50px;
+	}
+
+	h3 {
+		font-size: 22px;
+		font-weight: 600;
+		margin-bottom: 0;
+	}
+
+	h4 {
+		font-size: 15px;
+		font-weight: 400;
+	}
+
+	h1 {
+		font-size: min(5em, 12vw);
+		font-weight: 600;
+		padding: 60px; 
+	}
+
+	.more:hover {
+		text-decoration: underline;
+		cursor: pointer;
+	}
+
+	.modal-content {   
+		background-color: black;
+		padding: 30px 40px 40px 40px;
+	}
+
+	.desc-text {
+		font-size: min(2em, 5vw); 
+		font-weight: 600
+	}
+
+	@media (max-width: 200px) {
+		.hidden {
+			display: none !important;
+		}
+	}
+
+	#tag-line {
+		margin-bottom: 10vh; 
+		font-size: min(20px, 3.5vw);
+	}
+
+	::selection {
+		background: black; /* WebKit/Blink Browsers */
+	}  
+
+	.signup a,
+	.navbar a {
+		background-image: linear-gradient(to right, rgba(255,255,255,0) 50%, rgb(162, 189, 194) 50%);
+		background-position: -0% 0;
+		background-size: 200% auto;
+		line-height: 1.15em;
+		transition: background-position 0.2s ease-out;
+	}
+
+	.navbar .nav-signup:hover {
+		text-decoration: underline;
+	}
+
+	#myBtn {
+        position: fixed;
+        bottom: 30px;
+        float: right;
+        right: 10.5%;
+        max-width: 60px;
+		height: 40px;
+        width: 100%;
+		text-decoration: none;
+        font-size: 16px;
+        border-color: rgba(85, 85, 85, 0.2);
+        background-color: rgb(100,100,100);
+        padding: .5px;
+        border-radius: 4px;
+
+    }
+	.myBtn:hover {
+        background-color: #7b9a85;
+		text-decoration: none;
+    }
+
+	a, a:hover, a:focus, a:active {
+		text-decoration: none;
+		color: inherit;
+ 	}
+
+</style>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="assets/icon.png">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+	<title>COVID-19 Regulations</title>
+    <script src="sketch.js"></script>
+</head>
+
+<body>
+    <main class="container">
+        <nav class="navbar hidden">
+            <a href="#social">social</a>
+            <a href="#sports">sports</a>
+            <a href="#events">events</a>
+            <a class="nav-signup" href="https://www.moh.gov.sg/covid-19-phase-advisory" target="_blank">learn more</a>
+		</nav>
+
+        <section id="home">
+            <p id="tag-line">info overload? <br/>you're at the right place!</p>
+            <div style="font-size: min(5em, 12vw); font-weight: 800">COVID-19<br/>Updated Regulations<br/></div>
+			
+            <div class="desc-text">Providing carefully curated<br/>information for COVID-19<br/>From the people, for the people.</div>
+        </section>
+		<button id="myBtn"><a href="#home" style="color: white">top</a></button>
+
+        <section id="social">
+            <h1>Social</h1>
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="{% static 'images/dining.png' %}">
+					
+                    </div>
+                    <div class="card-description">
+                        <h3>F&B Establishments</h3>
+                        <span style="font-style: italic; font-size: small;">As of 15 August 2021</span>
+                        </br>  
+						<div class="tea-desc">
+							<h4 style="color: white">
+								{{Text_lst.0}} &nbsp
+							</h4>
+						</div>  
+                        </br>
+                        <a class="more" href="https://www.moh.gov.sg/covid-19-phase-advisory" target="_blank">more > </a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-image">
+                        <img src="{% static 'images/visits.png' %}">
+                    </div>
+                    <div class="card-description">
+                        <h3>Home visits</h3>
+                        <span style="font-style: italic; font-size: small;">As of 15 August 2021</span>
+                        </br>   
+						<div class="tea-desc">
+							<h4 style="color: white">
+								{{Text_lst.4}} &nbsp
+							</h4>
+						</div>
+                        </br>
+                        <a class="more" href="https://www.moh.gov.sg/covid-19-phase-advisory" target="_blank">more > </a>
+                    </div>
+                </div>
+				<div class="card">
+                    <div class="card-image">
+                        <img src="{% static 'images/performance.png' %}">
+                    </div>
+                    <div class="card-description">
+                        <h3>Live Performances</h3>
+                        <span style="font-style: italic; font-size: small;">As of 15 August 2021</span>
+                        </br>    
+						<div class="tea-desc">
+							<h4 style="color: white">
+								{{Text_lst.3}} &nbsp
+							</h4>
+						</div>
+						</br>
+                        <a class="more" href="https://www.moh.gov.sg/covid-19-phase-advisory" target="_blank">more > </a>
+                    </div>
+                </div>
+            </div>    
+        </section>
+        <section id="sports">
+            <h1>Sports</h1>
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="{% static 'images/sports.png' %}">
+                    </div>
+                    <div class="card-description">
+                        <h3>Outdoor activities</h3>
+                        <span style="font-style: italic; font-size: small;">As of 15 August 2021</span>
+                        </br>    
+							<div class="tea-desc">
+								<h4 style="color: white">
+									{{Text_lst.6}} &nbsp
+								</h4>
+							</div>
+						</br>
+                        <a class="more" href="https://www.moh.gov.sg/covid-19-phase-advisory" target="_blank">more > </a>
+                    </div>
+                </div>
+				<div class="card">
+                    <div class="card-image">
+                        <img src="{% static 'images/gym.png' %}">
+                    </div>
+                    <div class="card-description">
+                        <h3>Exercise Facilities</h3>
+                        <span style="font-style: italic; font-size: small;">As of 15 August 2021</span>
+                        </br>    
+							<div class="tea-desc">
+								<h4 style="color: white">
+									{{Text_lst.8}} &nbsp
+								</h4>
+							</div>
+						</br>
+                        <a class="more" href="https://www.moh.gov.sg/covid-19-phase-advisory" target="_blank">more > </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="leisure">
+            <h1>Leisure</h1>
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="{% static 'images/attraction.png' %}">
+                    </div>
+                    <div class="card-description">
+                        <h3>Attractions</h3>
+                        <span style="font-style: italic; font-size: small;">As of 15 August 2021</span>
+                        </br>  
+						<div class="tea-desc">
+							<h4 style="color: white">
+								{{Text_lst.9}} &nbsp
+							</h4>
+						</div>
+                        </br>
+                        <a class="more" href="https://www.moh.gov.sg/covid-19-phase-advisory" target="_blank">more > </a>
+                    </div>
+                </div>
+				<div class="card">
+                    <div class="card-image">
+                        <img src="{% static 'images/hotel.png' %}">
+                    </div>
+                    <div class="card-description">
+                        <h3>Hotels</h3>
+                        <span style="font-style: italic; font-size: small;">As of 15 August 2021</span>
+							</br>    
+							<div class="tea-desc">
+								<h4 style="color: white">
+									{{Text_lst.13}} &nbsp
+								</h4>
+							</div>
+							</br>
+                        <a class="more" href="https://www.moh.gov.sg/covid-19-phase-advisory" target="_blank">more > </a>
+                    </div>
+                </div>
+				<div class="card">
+                    <div class="card-image">
+                        <img src="{% static 'images/salon.png' %}">
+                    </div>
+                    <div class="card-description">
+                        <h3>Salons & Spas</h3>
+                        <span style="font-style: italic; font-size: small;">As of 15 August 2021</span>
+                        </br>    
+                        <div class="tea-desc">
+							<h4 style="color: white">
+								{{Text_lst.17}} &nbsp
+							</h4>
+						</div>
+						</br>
+                        <a class="more" href="https://www.moh.gov.sg/covid-19-phase-advisory" target="_blank">more > </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="more">
+            <h1 class="signup"><a href="https://www.moh.gov.sg/covid-19-phase-advisory" target="_blank">Learn more</a></h1>
+        </section>
+    </main>
+</body>
+
+<script>
+    let modals = document.getElementsByClassName('w3-modal');
+    // close modal when user clicks outside 
+    window.onclick = function(event) {
+        for (let modal of modals) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    }
+</script>
+</html>
